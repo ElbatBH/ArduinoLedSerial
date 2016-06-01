@@ -1,6 +1,10 @@
 #include <SoftwareSerial.h>
 
 int green = 13;
+int RX = 0; // 0 for USB, 10 with max232
+int TX = 1; // 1 for USB, 11 with max232
+
+SoftwareSerial mySerial(RX,TX); // pin RX, pin TX. 
 
 // LEDs status
 int greenstatus = 0;
@@ -8,14 +12,14 @@ int greenstatus = 0;
 void setup() {
       pinMode(green, OUTPUT);
       // initialize serial communication:
-      Serial.begin(9600);
+      mySerial.begin(9600);
               }
 
 void loop() {
   //mySerial.println("Hello, world?");
-  if (Serial.available() > 0)
+  if (mySerial.available() > 0)
   {
-    int inByte = Serial.read();
+    int inByte = mySerial.read();
     switch (inByte)
     {
       case 'g':
@@ -23,14 +27,14 @@ void loop() {
         if (greenstatus == 0)
         {
           digitalWrite(green, HIGH);
-          Serial.println("Green LED is ON");
+          mySerial.println("Green LED is ON");
           greenstatus = 1;
           break;
         }
         else
         {
           digitalWrite(green, LOW);
-          Serial.println("Green LED is OFF");
+          mySerial.println("Green LED is OFF");
           greenstatus = 0;
           break;
         }
@@ -39,7 +43,7 @@ void loop() {
         // turn all the LEDs off:
       digitalWrite(green, LOW);
       greenstatus = 0;
-      Serial.println("All LEDs are OFF");
+      mySerial.println("All LEDs are OFF");
        }
      }
     }
